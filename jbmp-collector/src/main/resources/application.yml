@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: jbmp-collector
+  threads:
+    virtual:
+      enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      # The collector serialises its own keys/values (16-byte router id key, WireCodec
+      # value), so both serializers are the raw byte-array serializer.
+      key-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      compression-type: lz4
+      batch-size: 16384
+      acks: "1"
+      properties:
+        linger.ms: 5
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+jbmp:
+  collector:
+    bmp-port: 1790
+    max-routers: 1024
+    read-timeout: 5m
+    collector-id: 0
+    enabled: true
+    topics:
+      route-monitor-v4: jbmp.route-monitor.v4
+      route-monitor-v6: jbmp.route-monitor.v6
+      peer-events: jbmp.peer-events
+      stats: jbmp.stats
+      route-mirror: jbmp.route-mirror
+      raw: jbmp.raw

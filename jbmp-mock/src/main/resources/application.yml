@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: jbmp-mock
+  main:
+    web-application-type: none
+  threads:
+    virtual:
+      enabled: true
+
+jbmp:
+  mock:
+    target-host: localhost
+    target-port: 1790
+    routers: 1
+    peers-per-router: 2
+    prefixes-per-peer: 1000
+    # One of: initial-dump | incremental | full-lifecycle | stress.
+    # 'stress' emits the full BGP attribute mix (communities, RR attributes, aggregator,
+    # and the L3VPN/EVPN/FlowSpec/SR-Policy/BGP-LS multiprotocol families).
+    scenario: initial-dump
+    incremental-updates-per-second: 0
+    loop: false
+    autostart: true

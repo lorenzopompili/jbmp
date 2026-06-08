@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: jbmp-consumer
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jbmp
+    username: jbmp
+    password: jbmp
+    hikari:
+      maximum-pool-size: 12   # matches the reference consumer's connection pool (pg_pool_size)
+      minimum-idle: 4
+      data-source-properties:
+        # Collapse JDBC executeBatch INSERTs (the rib_state upsert and the per-event writers)
+        # into multi-row VALUES statements: the driver sends far fewer parse/bind/execute
+        # messages, cutting both server-side planning and network round trips. Client-side
+        # driver behaviour only; it does not alter any server or broker configuration.
+        reWriteBatchedInserts: true
+  flyway:
+    enabled: false   # enabled once migrations are added
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: jbmp-consumer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 5000   # mirrors jbmp.consumer.batch-size; the byte-array factory sets this authoritatively
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+jbmp:
+  consumer:
+    batch-size: 5000        # Kafka max.poll.records: upper bound on one write batch per poll
+    concurrency: 12         # parallel listener container threads (partition consumers)
+    flush-interval: 500ms   # retained for the legacy BatchAccumulator; unused by the batch listener
+    group-id: jbmp-consumer
+    # store: jdbc   # opt into the PostgreSQL-backed writer; defaults to in-memory otherwise
+    topics:
+      route-monitor-v4: jbmp.route-monitor.v4
+      route-monitor-v6: jbmp.route-monitor.v6
+      peer-events: jbmp.peer-events
+      stats: jbmp.stats
+      route-mirror: jbmp.route-mirror

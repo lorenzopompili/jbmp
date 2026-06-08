@@ -1,0 +1,59 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Maven wrapper: the scripts, properties AND maven-wrapper.jar are committed
+# so the build is self-contained (do not ignore them).
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# Build / compiled
+*.class
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local-only config / secrets (real endpoints, credentials) — never commit
+.env
+*.env.local
+application-local.yml
+application-local.yaml
+*-local.properties
+
+# Local benchmarking & profiling artifacts — never commit. Throwaway scripts and captures
+# that reference local-only endpoints/credentials; not part of the product.
+bench*.ps1
+bench*.txt
+diag*.ps1
+diag*.txt
+*-results.txt
+*.jfr
+*.err
+stack*.txt
+*.hprof
+
